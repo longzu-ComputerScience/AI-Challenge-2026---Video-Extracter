@@ -1,11 +1,32 @@
 # AI Challenge 2026 — video retrieval workspace
 
+**Portfolio:** [GitHub](https://github.com/longzu-ComputerScience) · [LinkedIn](https://www.linkedin.com/in/vuz-long-7b4744393/)
+
 This workspace contains official preliminary query text, Colab notebooks for CLIP/FAISS retrieval, keyframe/video review helpers, and submission validation for AIC 2026.
 
 ## Current snapshot
 
-- P1: 25 queries (20 KIS, 4 QA, 1 TRAKE). The user reported a score of 2.5 and rank around 250/300; the main lesson is that automatic candidates were not visually verified or placed confidently at rank 1.
-- P2: 30 queries (19 KIS, 9 QA, 2 TRAKE). `AIC_2026_P2_Enhanced.ipynb` was run on 28/08/2026 and recorded a successful final ZIP build. Its QA answers were manually entered, `FINAL_ROWS_OVERRIDE` is empty, and TRAKE fallback drafts were used; this is historical evidence, not a verified answer key.
+- **Problem:** Given a natural-language query or question, locate the correct video and precise moment within a large multimedia dataset. The competition includes Known-Item Search (KIS), Question Answering (QA), and temporal event retrieval (TRAKE).
+- **P1 baseline:** 25 queries (20 KIS, 4 QA, 1 TRAKE). A CLIP/FAISS-based candidate retrieval workflow produced ranked search results. Crucially, retrieval similarity alone is not enough to verify the exact target frame or event.
+- **P2 iteration:** 30 queries (19 KIS, 9 QA, 2 TRAKE). `AIC_2026_P2_Enhanced.ipynb` was run on 28/08/2026 and recorded a successful ZIP build. Its QA answers were manually entered; `FINAL_ROWS_OVERRIDE` was empty, and TRAKE fallback drafts were used. These artifacts document the workflow, **not** verified ground-truth answers.
+
+## Retrieval methodology
+
+1. **Index the collection:** maintain video/frame metadata and extracted CLIP embeddings; build a FAISS vector index for approximate similarity search.
+2. **Generate candidates:** encode text queries, retrieve relevant visual candidates, and inspect ranked results instead of assuming the top vector match is correct.
+3. **Verify visually:** inspect contact sheets and selected original video segments to check whether an event actually appears in the proposed frame/time window.
+4. **Resolve task-specific output:** use frame-level verification for KIS, evidence-informed answers for QA, and tight timing checks for TRAKE.
+5. **Validate submissions:** apply explicit review and a final confirmation step before packaging the competition-format ZIP.
+
+## Known limitations and lessons
+
+- **Semantic similarity is not ground truth.** CLIP scores can rank visually related scenes while missing the exact event, so manual verification remains essential.
+- **Sparse keyframes are only anchors.** Their timestamps are useful for navigation but may not coincide with the required original video frame.
+- **Temporal localization is especially fragile.** TRAKE windows may be only a few frames wide; inspect the official MP4 near each candidate timestamp.
+- **Review provenance matters.** Distinguish model-generated candidate drafts, human-confirmed selections, manually entered QA answers, and fallbacks. Do not present unverified drafts as validated submissions.
+- **Reproducibility requires external assets.** Datasets and feature archives are held outside GitHub; the notebooks are not entirely self-contained.
+
+
 - The original video dataset, core archives, keyframe ZIPs, indices, candidates and final ZIPs are on Google Drive. They are not stored in this local folder; confirm their current availability before relying on a notebook output.
 
 ## Project map
